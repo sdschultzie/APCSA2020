@@ -1,8 +1,10 @@
 package Unit2;
 //(c) A+ Computer Science
 // www.apluscompsci.com
-//Name -
-//Date -
+//Name 	- Chris Schultz
+//Date 	- 2/4/20
+//Class - Period 2
+//Lab  	- 4
 
 public class Cube
 {
