@@ -1,6 +1,6 @@
 package Unit2;
 //A+ Computer Science  -  www.apluscompsci.com
-//Name 	- 
+//Name 	- Chris Schultz
 //Date 	- 2/4/20
 //Class - Period 2
 //Lab  	- 2
