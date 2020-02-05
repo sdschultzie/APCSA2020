@@ -44,15 +44,15 @@ public class MilesPerHour
 	public void print()
 	{
 		String mphString = String.format("%.0f", mph);
-		System.out.println("\n\n");
+		System.out.println("\n");
 		System.out.println(distance + " miles in " + hours + " hours and " + minutes + " minutes = " + mphString + " MPH.");
-		System.out.println("\n\n");
+		System.out.println("\n");
 	}
 	
 	//create a print or toString or both
 	
 	public String toString()
-	{
+	{		
 		return "";
 	}
 }
