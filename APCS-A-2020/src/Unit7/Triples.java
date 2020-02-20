@@ -16,14 +16,12 @@ public class Triples
 
 	public Triples(int num)
 	{
-
-
+		setNum(num);
 	}
 
 	public void setNum(int num)
 	{
-
-
+		number = num;
 	}
 	
 	private int greatestCommonFactor(int a, int b, int c)
@@ -34,6 +32,14 @@ public class Triples
 
 		return 1;
 	}
+	
+	private boolean pythagoreanCheck(int a, int b, int c)
+	{
+		return a*a + b*b == c*c;
+	}
+	
+	private boolean oddEvenCheck(int a, int b, int c)
+	
 
 	public String toString()
 	{
