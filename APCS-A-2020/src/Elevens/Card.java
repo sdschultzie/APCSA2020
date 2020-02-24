@@ -9,14 +9,24 @@ public class Card
 			"FIVE","SIX","SEVEN","EIGHT","NINE","TEN","JACK","QUEEN","KING"};
 
 	//instance variables
-		//String suit
-		//int face
+		private String suit;
+		private int rank;
+		private int pointValue;
 
   	//constructors
-
+		public Card() {
+			setCard("SPADES", 1);
+		}
+		
+		public Card(String suitIn, int rankIn) {
+			setCard(suitIn, rankIN);
+		}
 
 	// modifiers
-		//set methods
+		public void setCard(String suitIn, int rankIn){
+			suit = suitIn;
+			rank = rankIn;
+		}
 
 
   	//accessors
