@@ -16,17 +16,24 @@ public class ListOddToEven
 		int i = 0;
 		
 		while (i < ray.size() && firstOdd < 0) {
-			if (ray.get(i) % 2 != 0) 
+			
+			if (ray.get(i) % 2 != 0) {
 				firstOdd = i;
+				
+				while (i < ray.size() && nextEven < 0){
+					
+					if (ray.get(i) % 2 == 0) {
+						nextEven = i;
+						break;
+					}
+					else 
+						i++;
+				}
+			}
 			else
 				i++;
 		}
 		
-		while (i < ray.size() && nextEven < 0);
-			if (ray.get(i) % 2 == 0)
-				nextEven = i;
-			else 
-				i++;
 		
 		if (firstOdd >= 0 && nextEven >= 0)
 			return nextEven - firstOdd;
