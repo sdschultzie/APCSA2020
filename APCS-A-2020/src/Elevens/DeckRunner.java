@@ -16,13 +16,13 @@ public class DeckRunner
 		{
 			System.out.println( test.dealCard() );
 		}
-		
+		/*
 		test.shuffle();	
 		
 		System.out.println( "\n\nAll cards after shuffling." );
 		for( int j = 1; j <= 52; j++ )
 		{
 			System.out.println( test.dealCard() );
-		}				
+		}*/				
 	}
 }
