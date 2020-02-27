@@ -61,9 +61,9 @@ public class Card
 		return this.suit;
 	}
 	
-	public String getFace()
+	public int getFace()
 	{
-		return FACES[face];
+		return face;
 	}
 
 

@@ -46,9 +46,17 @@ public class Deck {
 	public void shuffle() 
 	{
 		//use Colletions.shuffle
-		Collections.shuffle(cards);
+		ArrayList<Card> shuffledDeck = new ArrayList<Card>(52);
+		
+		for (int i=0; i<(52/2); i+=1) {
+			shuffledDeck.add(cards.get(i));
+			shuffledDeck.add(cards.get(i+(52/2)));
+		}
+		
+		cards = shuffledDeck;
+		
 	   	//reset the top card 
-		top -= 1;
+		top = 51;
 	}
    
 }
