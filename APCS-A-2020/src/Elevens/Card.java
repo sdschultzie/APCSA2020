@@ -20,7 +20,7 @@ public class Card
 		setCard(suitIn, faceIn);
 	}
 	
-	public Card(String suitIn, String rankIn, int pointValIn) 
+	public Card(String rankIn, String suitIn, int pointValIn) 
 	{
 		setSuit(suitIn);
 		setRank(rankIn);
@@ -88,7 +88,10 @@ public class Card
   	//toString
 	public String toString() 
 	{
-		return FACES[face] + " of " + suit;
+		if (face == 0)
+			return rank + " of " + suit + " (Point Value: " + pointValue + ")";
+		else
+			return FACES[face] + " of " + suit;
 	}
 
  }

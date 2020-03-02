@@ -38,26 +38,28 @@ public class Deck {
 		size = cards.size();
 	}
 	
-	public Deck(String[] suits, String[] ranks, int[] pointVals)
+	public Deck(String[] ranks, String[] suits, int[] pointVals)
 	{
 		cards = new ArrayList<Card>();
 		
-		for (String suit : suits) {
-			for (String rank : ranks) {
-				for (int pointVal : pointVals) {
-					cards.add(new Card(suit, rank, pointVal));
-				}
+		for (int i=0; i<suits.length; i++) {
+			for (int j=0; j<ranks.length; j++) {
+				cards.add(new Card(suits[i], ranks[j], pointVals[j]));
 			}
 		}
+		
+		size = cards.size();
+		this.shuffle();
 	}
 		
-	
-   
 	
     //make a dealCard() method that returns the top card 
 	public Card dealCard()
 	{
-		return cards.get(top--);
+		if (size <= 0)
+			return null;
+		else
+			return cards.get(--size);
 
 	}
 	
@@ -74,6 +76,8 @@ public class Deck {
 	public void shuffle() 
 	{
 		//use Colletions.shuffle
+		Collections.shuffle(cards);
+		/*
 		ArrayList<Card> shuffledDeck = new ArrayList<Card>(52);
 		
 		for (int i=0; i<(52/2); i+=1) {
@@ -81,10 +85,25 @@ public class Deck {
 			shuffledDeck.add(cards.get(i+(52/2)));
 		}
 		
-		cards = shuffledDeck;
+		cards = shuffledDeck;*/
 		
 	   	//reset the top card 
 		top = 51;
+	}
+	
+	public String toString() {
+		String output = "size = " + size + "\nUndealt Cards:\n";
+		
+		for (int i=size-1; i >= 0; i--)
+		{
+			output += cards.get(i);
+			if (i != 0)
+				output += ", ";
+			if ((size-i) % 2 == 0)
+				output += "\n";
+		}
+		
+		return output;
 	}
    
 }

@@ -50,13 +50,16 @@ class Rational implements Comparable<Rational>
 	public void add(Rational  other)
 	{
 		//num1/den1 + num2/den2 
-		//new numerator = (num1 * den2 + num2 * den1)
-		//new denominator = (den1 * den2)
+		int num1 = this.getNumerator(),  den1 = this.getDenominator();
+		int num2 = other.getNumerator(), den2 = other.getDenominator();
 		
+		numerator = (num1 * den2 + num2 * den1);
+		denominator = (den1 * den2);
 		
 		reduce();
 	}
 
+	
 	private void reduce()
 	{
 		int GCD = gcd(numerator, denominator);
@@ -80,22 +83,25 @@ class Rational implements Comparable<Rational>
 	
 	public Object clone ()
 	{
-		return "";
+		return this;
 	}
 	
 	
 	public boolean equals( Object obj)
 	{
-
-
-		return false;
+		Rational r2 = (Rational)obj;
+		return (double)this.numerator/this.denominator == (double)r2.numerator/r2.denominator;
 	}
 
+	
 	public int compareTo(Rational other)
 	{
-
-
-		return -1;
+		if ((double)this.numerator/this.denominator > (double)other.numerator/other.denominator)
+			return 1;
+		else if ((double)this.numerator/this.denominator == (double)other.numerator/other.denominator)
+			return 0;
+		else
+			return -1;
 	}
 
 
@@ -103,6 +109,5 @@ class Rational implements Comparable<Rational>
 	public String toString() {
 		return numerator + "/" + denominator;
 	}
-	
 	
 }
