@@ -15,6 +15,7 @@ public class Deck {
 
 	
 	private List<Card> cards;
+	private int size;
 	private int top;
 
     //make a Deck constructor
@@ -33,15 +34,42 @@ public class Deck {
 				cards.add(new Card(suit, face));
 			}
 		}
+		
+		size = cards.size();
 	}
+	
+	public Deck(String[] suits, String[] ranks, int[] pointVals)
+	{
+		cards = new ArrayList<Card>();
+		
+		for (String suit : suits) {
+			for (String rank : ranks) {
+				for (int pointVal : pointVals) {
+					cards.add(new Card(suit, rank, pointVal));
+				}
+			}
+		}
+	}
+		
+	
    
+	
     //make a dealCard() method that returns the top card 
 	public Card dealCard()
 	{
 		return cards.get(top--);
 
 	}
+	
+	public int size() {
+		return size;
+	}
+	
+	public boolean isEmpty() {
+		return size()==0;
+	}
    
+	
     //write a shuffle() method
 	public void shuffle() 
 	{
