@@ -53,5 +53,12 @@ public class DeckTester {
 		System.out.println("  deal: " + d.dealCard());
 		System.out.println();
 		System.out.println();
+		
+		String[] ranks2 = {"ACE","TWO","THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE","TEN","JACK","QUEEN","KING"};
+		String[] suits2 = {"SPADES", "DIAMONDS", "HEARTS", "CLUBS"};
+		int[] pointVals2 = {11,2,3,4,5,6,7,8,9,10,10,10,10};
+		Deck d52 = new Deck(ranks2, suits2, pointVals2);
+		System.out.println("**** 52 Card Deck After 1 Inital Shuffle ****");
+		System.out.println(d52);
 	}
 }
