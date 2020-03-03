@@ -44,7 +44,7 @@ public class Deck {
 		
 		for (int i=0; i<suits.length; i++) {
 			for (int j=0; j<ranks.length; j++) {
-				cards.add(new Card(suits[i], ranks[j], pointVals[j]));
+				cards.add(new Card(ranks[j], suits[i], pointVals[j]));
 			}
 		}
 		
@@ -75,20 +75,18 @@ public class Deck {
     //write a shuffle() method
 	public void shuffle() 
 	{
-		//use Colletions.shuffle
-		Collections.shuffle(cards);
-		/*
-		ArrayList<Card> shuffledDeck = new ArrayList<Card>(52);
+		size = cards.size();
 		
-		for (int i=0; i<(52/2); i+=1) {
-			shuffledDeck.add(cards.get(i));
-			shuffledDeck.add(cards.get(i+(52/2)));
+		for (int i=0; i<this.size; i++) {
+			 int j = (int) (Math.random()*this.size());
+			 Card card1 = cards.get(i);
+			 Card card2 = cards.get(j);
+			 cards.set(i, card2);
+			 cards.set(j, card1);
 		}
 		
-		cards = shuffledDeck;*/
-		
 	   	//reset the top card 
-		top = 51;
+		top = this.size() - 1;
 	}
 	
 	public String toString() {
