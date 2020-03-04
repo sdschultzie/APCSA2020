@@ -16,10 +16,10 @@ public class Toy
 		count = 0;
 	}
 
-	public Toy(String nameIn)
+	public Toy(String nm)
 	{
-		name = nameIn;
-		count += 1;
+		name = nm;
+		count = 1;
 	}
 	
 	public int getCount()
@@ -44,6 +44,6 @@ public class Toy
 
 	public String toString()
 	{
-	   return name + ": " + count;
+	   return name + " " + count;
 	}
 }
