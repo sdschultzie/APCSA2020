@@ -24,7 +24,7 @@ public class GraphicsRunner extends JFrame
 
 		getContentPane().add(new ShapePanel());
 
-		//getContentPane().add(new MovingShapePanel());
+		getContentPane().add(new MovingShapePanel());
 
 		setVisible(true);
 

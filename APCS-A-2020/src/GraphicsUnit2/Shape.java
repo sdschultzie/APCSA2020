@@ -28,7 +28,12 @@ public class Shape
    public Shape(int x, int y, int wid, int ht, Color col, int xSpd, int ySpd)
    {
 		xPos = x;
-		//finish this constructor
+		yPos = y;
+		width = wid;
+		height = ht;
+		color = col;
+		xSpeed = xSpd;
+		ySpeed = ySpd;
    }
 
       /*
@@ -37,12 +42,7 @@ public class Shape
    public void draw(Graphics window)
    {
       window.setColor(color);
-      window.fillRect(xPos, yPos, width, height);
-
-      //draw whatever you want
-      //    ^
-      //  [ :: ]
-      //    ()
+      window.fillRoundRect(xPos, yPos, width, height, 10, 10);
 
    }
 
@@ -52,26 +52,62 @@ public class Shape
    public void draw(Graphics window, Color col)
    {
       window.setColor(col);
-      window.fillRect(xPos, yPos, width, height);
+      window.fillRoundRect(xPos, yPos, width, height, 10, 10);
    }
 
    public void moveAndDraw(Graphics window)
    {
-    	//not needed yet
+	   draw(window, Color.WHITE);
+	   setX(this.xPos + this.xSpeed);
+	   setY(this.yPos + this.ySpeed);
+	   draw(window);
+	   
    }
 
    //add in set and get methods for xPos, yPos, xSpeed, and ySpeed
    public int getX()
    {
-   	return 0;
+   	return xPos;
    }
 
    public void setX( int x )
    {
-   	//add code here
+   	this.xPos = x;
    }
 
-   public String toString()
+   public int getY() {
+	return yPos;
+	}
+	
+	public void setY(int yPos) {
+		this.yPos = yPos;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public int getXSpd() {
+		return xSpeed;
+	}
+	
+	public void setXSpd(int xSpeed) {
+		this.xSpeed = xSpeed;
+	}
+	
+	public int getYSpd() {
+		return ySpeed;
+	}
+	
+	public void setYSpd(int ySpeed) {
+		this.ySpeed = ySpeed;
+	}
+
+public String toString()
    {
    	return xPos+" "+yPos+" "+width+" "+height+" "+color+" "+xSpeed+" "+ySpeed;
    }
