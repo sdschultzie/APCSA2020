@@ -9,8 +9,9 @@ public class ToyRunner
 {
 	public static void main(String[] args)
 	{
-		Toy sry = new Toy("Sorry");
+		Toy sry = new Toy("sorry");
 		Toy GIJoe = new Toy("gi joe");
+		GIJoe.setCount(5);
 		
 		System.out.println(sry);
 		System.out.println(GIJoe);

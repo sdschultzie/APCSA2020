@@ -13,5 +13,7 @@ public class ToyStoreRunner
 	public static void main( String args[] )
 	{
 		ToyStore store = new ToyStore();
+		store.loadToys("sorry bat sorry sorry sorry train train teddy teddy ball ball");
+		System.out.println(store);
 	}
 }
