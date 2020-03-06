@@ -37,6 +37,7 @@ public class Deck {
 				cards.add(new Card(ranks[j], suitString, values[j]));
 			}
 		}
+		shuffle();
 	}
 
 	/**
