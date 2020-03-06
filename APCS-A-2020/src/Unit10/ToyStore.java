@@ -17,6 +17,10 @@ public class ToyStore
 	{
 		toyList = new ArrayList<Toy>();
 	}
+	
+	public String myName() {
+		return "Chris Schultz";
+	}
 
 	public void loadToys( String toys )
 	{
@@ -76,7 +80,6 @@ public class ToyStore
 			output += toy + ", ";
 		}
 		
-		output += "\n\n Most Frequent Toy: " + getMostFrequentToy();
 		return output;
 	}
 }
