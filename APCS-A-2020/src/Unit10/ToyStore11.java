@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import static java.lang.System.*;
 
-public class ToyStore
+public class ToyStore11
 {
 	private ArrayList<Toy> toyList;
 
-	public ToyStore()
+	public ToyStore11()
 	{
 		toyList = new ArrayList<Toy>();
 	}
