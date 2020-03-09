@@ -13,6 +13,8 @@ public class CelebrityRunner
 	 */
 	public static void main(String [] args)
 	{
-
+		CelebrityGame test = new CelebrityGame();
+		test.prepareGame();
+		test.play();
 	}
 }
