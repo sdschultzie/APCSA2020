@@ -52,6 +52,19 @@ public class CelebrityGame
 	 */
 	public boolean processGuess(String guess)
 	{
+		guess = guess.trim();
+		
+		if (this.gameCelebrity.getName().equalsIgnoreCase(guess)){
+			celebGameList.remove(this.gameCelebrity);
+			if (getCelebrityGameSize() > 0) {
+				this.gameCelebrity = celebGameList.get(0);
+			}
+			else {
+				this.gameCelebrity = new Celebrity("", "");
+			}
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -74,14 +87,22 @@ public class CelebrityGame
 	 * 
 	 * @param name
 	 *            The name of the celebrity
-	 * @param guess
+	 * @param clues
 	 *            The clue(s) for the celebrity
 	 * @param type
 	 *            What type of celebrity
 	 */
-	public void addCelebrity(String name, String guess, String type)
+	public void addCelebrity(String name, String clues, String type)
 	{
-		celebGameList.add(new Celebrity(name, guess));
+		if (type.equals("Sport")) {
+			celebGameList.add(new SportCelebrity(name, clues));
+		}
+		else if (type.equals("Literature")) {
+			celebGameList.add(new LiteratureCelebrity(name, clues));
+		}
+		else {
+			celebGameList.add(new Celebrity(name, clues));
+		}
 	}
 
 	/**
@@ -105,7 +126,30 @@ public class CelebrityGame
 	public boolean validateClue(String clue, String type)
 	{
 		clue = clue.trim();
-		return clue.length() >= 10;
+		boolean validClue = false;
+		
+		if (clue.length()>=10) {
+			
+			validClue = true;
+			
+			if (type.equalsIgnoreCase("sport")) {
+				String clues [] = clue.split(",");
+				if (clues.length > 1)
+					validClue = true;
+				else
+					validClue = false;
+			}
+			
+			if (type.equalsIgnoreCase("sport")) {
+				String clues [] = clue.split(",");
+				if (clues.length > 1)
+					validClue = true;
+				else
+					validClue = false;
+			}
+			
+		}
+		return validClue;
 	}
 
 	/**
@@ -115,7 +159,7 @@ public class CelebrityGame
 	 */
 	public int getCelebrityGameSize()
 	{
-		return 0;
+		return celebGameList.size();
 	}
 
 	/**
@@ -126,7 +170,7 @@ public class CelebrityGame
 	 */
 	public String sendClue()
 	{
-		return null;
+		return gameCelebrity.getClue();
 	}
 
 	/**
