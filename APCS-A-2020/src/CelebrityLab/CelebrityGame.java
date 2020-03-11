@@ -77,7 +77,7 @@ public class CelebrityGame
 	{
 		if (celebGameList != null && celebGameList.size() > 0) {
 			this.gameCelebrity = celebGameList.get(0);
-			gameWindow.replaceScreen("Game");
+			gameWindow.replaceScreen("GAME");
 		}
 		
 	}
