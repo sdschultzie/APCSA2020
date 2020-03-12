@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/schultzc8791/Documents/sinbad.jar"/>
+	<classpathentry kind="lib" path="C:/Users/schultzc8791/Desktop/EclipseWorkSpace/APCSA2020/APCS-A-2020/sinbad.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
