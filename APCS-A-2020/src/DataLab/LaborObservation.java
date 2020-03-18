@@ -103,6 +103,6 @@ public class LaborObservation {
 				"35-44: " + getRate35_44() + "\n" +
 				"45-54: " + getRate45_54() + "\n" +
 				"55-64: " + getRate55_64() + "\n" +
-				"65+: " + getRate65();
+				"65+: " + getRate65() + "\n";
 	}
 }
