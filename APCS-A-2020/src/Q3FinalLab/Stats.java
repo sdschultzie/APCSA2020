@@ -33,6 +33,7 @@ public class Stats {
 		setRecTD(0);
 		setFumblesLost(0);
 		setTwoPC(0);
+		calcFantasyPoints();
 	}
 	
 	public Stats(int gpIn, int py, int ptd, int i, int ruy, int rutd, int re, int reyd, int retd, int fl, int tpc) {
@@ -47,6 +48,7 @@ public class Stats {
 		setRecTD(retd);
 		setFumblesLost(fl);
 		setTwoPC(tpc);
+		calcFantasyPoints();
 	}
 
 	public int getGamesPlayed() {
@@ -91,6 +93,10 @@ public class Stats {
 
 	public int getTwoPC() {
 		return twoPC;
+	}
+	
+	public double getTotalFantasyPoints() {
+		return totalFantasyPoints;
 	}
 
 	public void setGamesPlayed(int gamesPlayed) {
