@@ -3,14 +3,14 @@ package Q3FinalLab;
 public class Player {
 	private String name;
 	private String teamAbrv;
-	private int gamesPlayed;
-	private Points myPoints;
+	private String position;
+	private Stats myStats;
 	
-	public Player(String nameIn, String teamAbrvIn, int gamesPlayedIn) {
-		setName(nameIn);
-		setTeamAbrv(teamAbrvIn);
-		setGamesPlayed(gamesPlayedIn);
-		myPoints = new Points();
+	public Player(String nmIn, String teamIn, String posIn) {
+		setName(nmIn);
+		setTeamAbrv(teamIn);
+		setPosition(posIn);
+		myStats = new Stats();
 	}
 
 	public String getName() {
@@ -21,20 +21,37 @@ public class Player {
 		return teamAbrv;
 	}
 
-	public int getGamesPlayed() {
-		return gamesPlayed;
+	public String getPosition() {
+		return position;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String nmIn) {
+		String nonLetters = "*+/";
+		for (int i=0; i<nmIn.length(); i++) {
+			if (nonLetters.contains(nmIn.substring(i,i+1))) {
+				this.name = nmIn.substring(0,i);
+				break;
+			}
+		}
 	}
 
-	public void setTeamAbrv(String teamAbrv) {
-		this.teamAbrv = teamAbrv;
+	public void setTeamAbrv(String teamIn) {
+		this.teamAbrv = teamIn;
 	}
 
-	public void setGamesPlayed(int gamesPlayed) {
-		this.gamesPlayed = gamesPlayed;
+	public void setPosition(String posIn) {
+		this.position = posIn;
+	}
+	
+	public void setStats(Stats s) {
+		this.myStats = s;
+	}
+	
+	public String toString() {
+		String output = "";
+		output += "Name: " + name + "\t" + "Team: " + teamAbrv + "\t" + "Position: " + position + "\n";
+		output += myStats;
+		return output;
 	}
 	
 	
