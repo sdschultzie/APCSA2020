@@ -16,15 +16,15 @@ public class Block implements Locatable
 
 	public Block() {
 		setPos(100,100);
-		setWidth(20);
-		setHeight(20);
+		setWidth(10);
+		setHeight(10);
 		setColor(Color.blue);
 	}
 	
 	public Block(int x, int y) {
 		setPos(x,y);
-		setWidth(50);
-		setHeight(50);
+		setWidth(10);
+		setHeight(10);
 		setColor(Color.cyan);
 	}
 
