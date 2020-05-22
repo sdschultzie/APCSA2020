@@ -55,6 +55,18 @@ public class Ship extends MovingThing
 	{
 	   return speed;
 	}
+	
+	public void setImage(String directory) {
+		try
+		{
+			URL url = getClass().getResource(directory);
+			image = ImageIO.read(url);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Couldn't locate image file");
+		}
+	}
 
 	public void move(String direction)
 	{
@@ -71,6 +83,18 @@ public class Ship extends MovingThing
 	public void draw( Graphics window )
 	{
 		window.drawImage(image,getX(),getY(),getWidth(),getHeight(),null);
+	}
+	
+	public boolean hitByAlien(Object o) {
+		Alien a = (Alien) o;
+		
+		if (this.getX() + this.getWidth() > a.getX() && this.getX() < a.getX() + a.getWidth()) {
+			if (this.getY() < a.getY() + a.getHeight() && this.getY() + this.getHeight() > a.getY()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public String toString()

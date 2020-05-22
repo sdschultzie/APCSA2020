@@ -18,10 +18,11 @@ import java.util.ArrayList;
 public class OuterSpace extends Canvas implements KeyListener, Runnable
 {
 	private Ship ship;
-   	private AlienHorde horde;
+   	private AlienHorde2 horde;
 	private Bullets shots;
 	private boolean takenShot;
 	private int waitTimer = 0;
+	private boolean gameOver = false;
 	
 
 	private boolean[] keys;
@@ -35,8 +36,8 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
 		//instantiate other instance variables
 		//Ship, Alien
-		ship = new Ship (400,400,30,30,3);
-		horde = new AlienHorde(20);
+		ship = new Ship (400,500,30,30,3);
+		horde = new AlienHorde2(10);
 		shots = new Bullets();
 		takenShot = false;
 
@@ -76,6 +77,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		graphToBack.drawString("StarFighter ", 25, 50 );
 		graphToBack.setColor(Color.BLACK);
 		graphToBack.fillRect(0,0,800,600);
+		horde.removeDeadOnes(shots.getList());
 		horde.drawEmAll(graphToBack);
 		ship.draw(graphToBack);
 		if (shots.size() > 0) {
@@ -83,7 +85,6 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 			shots.moveEmAll();
 		}
 		
-		horde.removeDeadOnes(shots.getList());
 		
 		//add code to move Ship, Alien, etc.
 		
@@ -115,6 +116,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		}
 		
 		horde.moveEmAll();
+		horde.checkWallHit();
 		
 
 
@@ -147,7 +149,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		{
 			keys[4] = true;
 		}
-		repaint();
+		//repaint();
 	}
 
 	public void keyReleased(KeyEvent e)
@@ -172,7 +174,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		{
 			keys[4] = false;
 		}
-		repaint();
+		//repaint();
 	}
 
 	public void keyTyped(KeyEvent e)
@@ -182,16 +184,24 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
    public void run()
    {
-   	try
-   	{
-   		while(true)
+   		try
    		{
-   		   Thread.currentThread().sleep(5);
-            repaint();
-         }
-      }catch(Exception e)
-      {
-      }
-  	}
+   			while(gameOver == false)
+   			{
+   				Thread.currentThread().sleep(9);
+   				repaint();
+   				for (Alien a : horde.getAliens()) {
+   					if (ship.hitByAlien(a)) {
+   						System.out.println("GAME OVER YOU LOST");
+   						ship.setImage("/Starfighter/Images/pu.jpg");
+   						repaint();
+   						gameOver = true;
+   					}
+   				}
+   			}
+   		}catch(Exception e)
+   		{
+   		}
+   }
 }
 
