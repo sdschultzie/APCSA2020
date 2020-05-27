@@ -1,22 +1,22 @@
-package Pong;
-//(c) A+ Computer Science
-//www.apluscompsci.com
-//Name -
+package Tanks;
 
-import javax.swing.JFrame;
 import java.awt.Component;
 
-public class TheGame extends JFrame
+import javax.swing.JFrame;
+
+import Pong.Pong;
+import Pong.TheGame;
+
+public class MainFrame extends JFrame
 {
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
 
-	public TheGame()
+	public MainFrame()
 	{
-		super("PONG");
-		//setSize(WIDTH,HEIGHT);
+		super("Tanks");
 
-		Pong game = new Pong();
+		GamePanel game = new GamePanel();
 
 		((Component)game).setFocusable(true);
 		getContentPane().add(game);
@@ -29,6 +29,6 @@ public class TheGame extends JFrame
 
 	public static void main( String args[] )
 	{
-		TheGame run = new TheGame();
+		MainFrame run = new MainFrame();
 	}
 }
