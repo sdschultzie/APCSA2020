@@ -11,14 +11,14 @@ public class TankBody extends Block
 	
 	//Constructors --------------------------------------------
 	//constructor for user tank
-	public TankBody(int x, int y) 
+	public TankBody(double x, double y) 
 	{
 		super(x,y,34,34);
 		setSpeed(2);
 	}
 	
 	//constructor for enemy tanks
-	public TankBody(int x, int y, Color c, int s)
+	public TankBody(double x, double y, Color c, int s)
 	{
 		super(x,y,34,34,c);
 		setSpeed(s);
@@ -30,11 +30,11 @@ public class TankBody extends Block
 		return speed;
 	}
 	
-	public int getCenterX() {
+	public double getCenterX() {
 		return getX()+getWidth()/2;
 	}
 	
-	public int getCenterY() {
+	public double getCenterY() {
 		return getY()+getHeight()/2;
 	}
 

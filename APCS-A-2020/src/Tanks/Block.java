@@ -2,12 +2,14 @@ package Tanks;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 // Adapted from Pong block class
 public class Block implements Locatable
 {
-	private int xPos;
-	private int yPos;
+	private double xPos;
+	private double yPos;
 	private int width;
 	private int height;
 	private Color color;
@@ -21,7 +23,7 @@ public class Block implements Locatable
 	}
 	
 	//used for wall blocks
-	public Block(int x, int y) {
+	public Block(double x, double y) {
 		setPos(x,y);
 		setWidth(36);
 		setHeight(36);
@@ -29,14 +31,14 @@ public class Block implements Locatable
 	}
 
 	//used for user tank
-	public Block (int x, int y, int w, int h) {
+	public Block (double x, double y, int w, int h) {
 		setPos(x,y);
 		setWidth(w);
 		setHeight(h);
 		setColor(Color.blue);
 	}
 	
-	public Block (int x, int y, int w, int h, Color c) {
+	public Block (double x, double y, int w, int h, Color c) {
 		setPos(x,y);
 		setWidth(w);
 		setHeight(h);
@@ -46,18 +48,18 @@ public class Block implements Locatable
 	
 	// Set Methods -----------------------------------------
 	@Override
-	public void setPos(int x, int y) {
+	public void setPos(double x, double y) {
 		setX(x);
 		setY(y);
 	}
 
 	@Override
-	public void setX(int x) {
+	public void setX(double x) {
 		this.xPos = x;
 	}
 
 	@Override
-	public void setY(int y) {
+	public void setY(double y) {
 		this.yPos = y;	
 	}
 
@@ -78,12 +80,12 @@ public class Block implements Locatable
 	
 	// Get Methods ----------------------------------------
 	@Override
-	public int getX() {
+	public double getX() {
 		return xPos;
 	}
 
 	@Override
-	public int getY() {
+	public double getY() {
 		return yPos;
 	}   
    
@@ -104,8 +106,9 @@ public class Block implements Locatable
 	
     public void draw(Graphics window)
     {
-    	window.setColor(color);
-        window.fillRect(getX(), getY(), getWidth(), getHeight());
+    	Graphics2D g = (Graphics2D) window;
+    	g.setColor(color);
+        g.fill(new Rectangle2D.Double(getX()+0.5, getY(), getWidth(), getHeight()));
     }
 
 //    public void draw(Graphics window, Color c)

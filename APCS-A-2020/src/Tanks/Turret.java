@@ -13,7 +13,7 @@ public class Turret extends Block
 	
 	//Constructors -------------------------------
 	//constructor for user turret
-	public Turret(int x, int y) 
+	public Turret(double x, double y) 
 	{
 		super(0,0,26,6,new Color(0,0,100));
 		setPivot(x,y);
@@ -56,7 +56,7 @@ public class Turret extends Block
 		this.angle = a;
 	}
 	
-	public void setPivot(int x, int y) {
+	public void setPivot(double x, double y) {
 		setX(x);
 		setY(y-getHeight()/2);
 	}

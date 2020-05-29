@@ -7,10 +7,11 @@ import static java.lang.Character.toUpperCase;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GamePanel extends JPanel implements Runnable, MouseMotionListener, KeyListener
+public class GamePanel extends JPanel implements Runnable, MouseMotionListener, KeyListener, MouseListener
 {
 	// Instance variables
 	private Tank tank;
+	private Bullet b;
 	
 	private boolean[] keys;
 	
@@ -29,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 		new Thread(this).start();
 		//add event listeners
         addMouseMotionListener(this);
+        addMouseListener(this);
         addKeyListener(this);
 	}
 	
@@ -38,8 +40,12 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 	{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
+		if (b != null) {
+			b.move();
+			b.draw(g2);
+		}
 		tank.draw(g2);
-		
+
 		
 		//Moves tank with WASD
 		if(keys[0] == true)
@@ -99,7 +105,29 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 		Turret tu = tank.getTurret();
 		tu.setAngle(Math.atan2(e.getY() - (tu.getY()+tu.getHeight()/2), e.getX() - tu.getX()));
 	}
-	//-----------------------------------------------------
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		double angle = tank.getTurret().getAngle();
+		double x = tank.getTurret().getX() + (tank.getTurret().getWidth()*Math.cos(angle));
+		double y = tank.getTurret().getY() + (tank.getTurret().getWidth())*Math.sin(angle);
+		double xSpd = tank.getTurret().getBulletSpeed()*Math.cos(angle);
+		double ySpd = tank.getTurret().getBulletSpeed()*Math.sin(angle);
+		b = new Bullet(x, y, xSpd, ySpd);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	//------------------------------------------------------------
 	
 	
 	// Main loop
@@ -109,7 +137,7 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 	   	{
 	   		while(true)
 	   		{
-	   			Thread.currentThread().sleep(10);
+	   			Thread.currentThread().sleep(13);
 	            repaint();
 	        }
 	   		
