@@ -3,6 +3,9 @@ package Tanks;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 
 public class Turret extends Block
 {
@@ -15,14 +18,14 @@ public class Turret extends Block
 	//constructor for user turret
 	public Turret(double x, double y) 
 	{
-		super(0,0,26,6,new Color(0,0,100));
+		super(0,0,26,6,Color.blue.darker().darker());
 		setPivot(x,y);
 		setMaxBullets(5);
 		setBulletSpeed(4);
 	}
 	
 	//constructor for enemy turrets
-	public Turret(int x, int y, Color c, int max, int spd)
+	public Turret(double x, double y, Color c, int max, int spd)
 	{
 		super(0,0,26,6,c);
 		setPivot(x,y);
@@ -66,8 +69,17 @@ public class Turret extends Block
 	public void draw(Graphics window) 
 	{
 		Graphics2D g2 = (Graphics2D) window;
-		g2.rotate(angle, getX(), getY()+getHeight()/2);
-		super.draw(g2);
+		g2.setColor(getColor());
+		
+		//Modified from https://stackoverflow.com/questions/7517688/rotate-a-java-graphics2d-rectangle
+		Rectangle2D r = new Rectangle2D.Double(getX(), getY(), getWidth(), getHeight());
+		Path2D.Double path = new Path2D.Double();
+		path.append(r, false);
+
+		AffineTransform t = new AffineTransform();
+		t.rotate(angle, getX(), getY() + getHeight()/2);
+		path.transform(t);
+		g2.fill(path);
 	}
 	
 	public String toString() {

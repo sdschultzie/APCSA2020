@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class TankBody extends Block
 {
 	//Instance Variables
-	private int speed;
+	private double speed;
 	
 	
 	//Constructors --------------------------------------------
@@ -18,7 +18,7 @@ public class TankBody extends Block
 	}
 	
 	//constructor for enemy tanks
-	public TankBody(double x, double y, Color c, int s)
+	public TankBody(double x, double y, Color c, double s)
 	{
 		super(x,y,34,34,c);
 		setSpeed(s);
@@ -26,7 +26,7 @@ public class TankBody extends Block
 
 	
 	//Getters & Setters --------------------------------------
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 	
@@ -38,7 +38,7 @@ public class TankBody extends Block
 		return getY()+getHeight()/2;
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 	//--------------------------------------------------------
@@ -58,7 +58,7 @@ public class TankBody extends Block
 	
 	
 	public String toString() {
-		return getX() + " " + getY() + " " + getWidth() + " " + getHeight() + " " + getSpeed();
+		return getX() + " " + getY() + " " + getWidth() + " " + getHeight() + " " + getSpeed() + " " + getColor();
 	}
 	
 }

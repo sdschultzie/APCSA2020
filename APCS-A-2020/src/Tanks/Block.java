@@ -108,7 +108,7 @@ public class Block implements Locatable
     {
     	Graphics2D g = (Graphics2D) window;
     	g.setColor(color);
-        g.fill(new Rectangle2D.Double(getX()+0.5, getY(), getWidth(), getHeight()));
+        g.fill(new Rectangle2D.Double(getX(), getY(), getWidth(), getHeight()));
     }
 
 //    public void draw(Graphics window, Color c)

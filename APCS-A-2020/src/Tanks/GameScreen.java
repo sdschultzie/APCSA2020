@@ -7,31 +7,34 @@ import static java.lang.Character.toUpperCase;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GamePanel extends JPanel implements Runnable, MouseMotionListener, KeyListener, MouseListener
+public class GameScreen extends JPanel implements Runnable, MouseMotionListener, KeyListener, MouseListener
 {
 	// Instance variables
+	private Level currentLevel;
 	private Tank tank;
-	private Bullet b;
+	private EnemyTank enemy;
 	
 	private boolean[] keys;
 	
 	
 	// Constructor
-	public GamePanel()
+	public GameScreen()
 	{
+		currentLevel = new Level(1);
 		keys = new boolean[4];
 		
-		tank = new Tank(50,300);
+		tank = new Tank(150,300);
+		enemy = new BrownTank(900,300);
 		
     	setBackground(Color.WHITE);
-		setVisible(true);
-		setPreferredSize(new Dimension (800,600));
-		
-		new Thread(this).start();
+    	setPreferredSize(new Dimension (972,576));
+	
 		//add event listeners
         addMouseMotionListener(this);
         addMouseListener(this);
         addKeyListener(this);
+        setFocusable(true);
+        
 	}
 	
 	
@@ -40,29 +43,33 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 	{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		if (b != null) {
-			b.move();
-			b.draw(g2);
-		}
-		tank.draw(g2);
+//		for (Bullet b : tank.getBullets()) {
+//			b.moveAndDraw(g2);
+//		}
+		//enemy.getTurret().setAngle(Math.PI);
+		//enemy.draw(g2);
+		//tank.draw(g2);
+		currentLevel.draw(g2);
+		currentLevel.checkCollisions();
+		
 
 		
 		//Moves tank with WASD
 		if(keys[0] == true)
 		{
-			tank.move(0);
+			currentLevel.getPlayerTank().move(0);
 		}
 		if(keys[1] == true)
 		{
-			tank.move(1);
+			currentLevel.getPlayerTank().move(1);
 		}
 		if(keys[2] == true)
 		{
-			tank.move(2);
+			currentLevel.getPlayerTank().move(2);
 		}
 		if(keys[3] == true)
 		{
-			tank.move(3);
+			currentLevel.getPlayerTank().move(3);
 		}
 		
 	}
@@ -102,7 +109,7 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Turret tu = tank.getTurret();
+		Turret tu = currentLevel.getPlayerTank().getTurret();
 		tu.setAngle(Math.atan2(e.getY() - (tu.getY()+tu.getHeight()/2), e.getX() - tu.getX()));
 	}
 	
@@ -111,12 +118,7 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		double angle = tank.getTurret().getAngle();
-		double x = tank.getTurret().getX() + (tank.getTurret().getWidth()*Math.cos(angle));
-		double y = tank.getTurret().getY() + (tank.getTurret().getWidth())*Math.sin(angle);
-		double xSpd = tank.getTurret().getBulletSpeed()*Math.cos(angle);
-		double ySpd = tank.getTurret().getBulletSpeed()*Math.sin(angle);
-		b = new Bullet(x, y, xSpd, ySpd);
+		currentLevel.getPlayerTank().shoot();
 	}
 
 	@Override
@@ -129,12 +131,18 @@ public class GamePanel extends JPanel implements Runnable, MouseMotionListener, 
 	public void mouseExited(MouseEvent e) {}
 	//------------------------------------------------------------
 	
+	public void startGame() {
+		setVisible(true);
+		new Thread(this).start();
+	}
+	
 	
 	// Main loop
 	@Override
 	public void run() {
 	   	try
 	   	{
+	   		requestFocusInWindow(); //needed to make key listeners work
 	   		while(true)
 	   		{
 	   			Thread.currentThread().sleep(13);
