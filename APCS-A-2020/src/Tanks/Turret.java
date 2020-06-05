@@ -21,7 +21,7 @@ public class Turret extends Block
 		super(0,0,26,6,Color.blue.darker().darker());
 		setPivot(x,y);
 		setMaxBullets(5);
-		setBulletSpeed(4);
+		setBulletSpeed(3);
 	}
 	
 	//constructor for enemy turrets

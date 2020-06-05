@@ -9,11 +9,11 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame
 {
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 600;
-	private CardLayout cl;
-	private JPanel panel;
-	
+	private CardLayout cl;	
+	JPanel cardPanel = new JPanel();
+	GameScreen gamePanel;
+	TitleScreen titlePanel;
+	HighscoresScreen highscoresPanel;
 
 	public MainFrame()
 	{
@@ -24,32 +24,68 @@ public class MainFrame extends JFrame
 		cl = new CardLayout();
 		
 		//set up main JPanel that will hold the other screens (JPanels)
-		JPanel cardPanel = new JPanel();
 		cardPanel.setLayout(cl);
-		//cardPanel.setPreferredSize(new Dimension(800,600));
 		
 		//add different screens to main JPanel with cardLayout
-		GameScreen gamePanel = new GameScreen();
-		TitleScreen titlePanel = new TitleScreen();
+		gamePanel = new GameScreen(this);
+		titlePanel = new TitleScreen();
+		highscoresPanel = new HighscoresScreen();
 		cardPanel.add(titlePanel, "title");
 		cardPanel.add(gamePanel, "game");
+		cardPanel.add(highscoresPanel, "highscores");
 		
 		
 		//Create another JPanel to hold some buttons
 		JPanel buttonPanel = new JPanel();
 		
 		//create buttons and add to buttonPanel
-		JButton gameButton = new JButton("Start Game");
+		JButton startButton = new JButton("Start Game");
 		JButton highScoresButton = new JButton("View Highscores");
-		buttonPanel.add(gameButton);
+		JButton homeButton = new JButton("Home");
+		buttonPanel.add(startButton);
 		buttonPanel.add(highScoresButton);
 		
 		//add button listers
-		gameButton.addActionListener(new ActionListener()
+		startButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e) {
 				cl.show(cardPanel, "game");
 				gamePanel.startGame();
+				buttonPanel.remove(startButton);
+				buttonPanel.remove(highScoresButton);
+				buttonPanel.add(homeButton);
+				buttonPanel.revalidate();
+				buttonPanel.repaint();
+			}
+		});
+		
+		highScoresButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				switchPanel("highscores");
+				buttonPanel.remove(startButton);
+				buttonPanel.remove(highScoresButton);
+				buttonPanel.add(homeButton);
+				buttonPanel.revalidate();
+				buttonPanel.repaint();
+			}
+		});
+		
+		homeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e) {
+				try{
+					gamePanel.stopGame();
+				}
+				catch(Exception ex) {}
+				
+				cl.show(cardPanel, "title");
+				startButton.setText("Start Game");
+				buttonPanel.remove(homeButton);
+				buttonPanel.add(startButton);
+				buttonPanel.add(highScoresButton);
+				buttonPanel.revalidate();
+				buttonPanel.repaint();
 			}
 		});
 
@@ -61,6 +97,11 @@ public class MainFrame extends JFrame
 		pack();
 		setLocationRelativeTo(null);
 
+	}
+	
+	public void switchPanel(String panel) {
+		cl.show(cardPanel, panel);
+		highscoresPanel.displayScores();
 	}
 
 	public static void main( String args[] )

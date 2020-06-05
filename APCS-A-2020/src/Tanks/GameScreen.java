@@ -6,27 +6,30 @@ import static java.lang.Character.toUpperCase;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Duration;
+import java.time.Instant;
 
 public class GameScreen extends JPanel implements Runnable, MouseMotionListener, KeyListener, MouseListener
 {
 	// Instance variables
-	private Level currentLevel;
-	private Tank tank;
-	private EnemyTank enemy;
-	
+	private MainFrame frame;
+	private Level level;
+	private int levelCounter;
+	private int previousScore;
+	private int levelScore;
+	private Instant startTime;
+	private Instant currentTime;
+	private boolean terminated;
 	private boolean[] keys;
 	
-	
 	// Constructor
-	public GameScreen()
+	public GameScreen(MainFrame f)
 	{
-		currentLevel = new Level(1);
+		frame = f;
 		keys = new boolean[4];
 		
-		tank = new Tank(150,300);
-		enemy = new BrownTank(900,300);
-		
     	setBackground(Color.WHITE);
+    	setLayout(new GridBagLayout());
     	setPreferredSize(new Dimension (972,576));
 	
 		//add event listeners
@@ -34,44 +37,46 @@ public class GameScreen extends JPanel implements Runnable, MouseMotionListener,
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        
 	}
 	
 	
 	// paint method used to repaint -----------------------
 	public void paintComponent(Graphics g) 
 	{
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-//		for (Bullet b : tank.getBullets()) {
-//			b.moveAndDraw(g2);
-//		}
-		//enemy.getTurret().setAngle(Math.PI);
-		//enemy.draw(g2);
-		//tank.draw(g2);
-		currentLevel.draw(g2);
-		currentLevel.checkCollisions();
-		
-
-		
-		//Moves tank with WASD
-		if(keys[0] == true)
-		{
-			currentLevel.getPlayerTank().move(0);
+		if (level.gameOver() == false) {
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D) g;
+			
+			//Moves playerTank with WASD
+			if(keys[0] == true)
+			{
+				level.getPlayerTank().move(0);
+			}
+			if(keys[1] == true)
+			{
+				level.getPlayerTank().move(1);
+			}
+			if(keys[2] == true)
+			{
+				level.getPlayerTank().move(2);
+			}
+			if(keys[3] == true)
+			{
+				level.getPlayerTank().move(3);
+			}
+			
+			level.checkAllCollisions();
+			levelScore = level.getScore();
+			level.draw(g2);
+			currentTime = Instant.now();
+			g2.drawString("Time: " + Duration.between(startTime, currentTime), 40, 50);
+			if (level.isComplete()) {
+				previousScore = previousScore + levelScore;
+				levelCounter++;
+				level = new Level(levelCounter);
+				levelScore = level.getScore();
+			}
 		}
-		if(keys[1] == true)
-		{
-			currentLevel.getPlayerTank().move(1);
-		}
-		if(keys[2] == true)
-		{
-			currentLevel.getPlayerTank().move(2);
-		}
-		if(keys[3] == true)
-		{
-			currentLevel.getPlayerTank().move(3);
-		}
-		
 	}
 	
 	
@@ -109,8 +114,11 @@ public class GameScreen extends JPanel implements Runnable, MouseMotionListener,
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Turret tu = currentLevel.getPlayerTank().getTurret();
-		tu.setAngle(Math.atan2(e.getY() - (tu.getY()+tu.getHeight()/2), e.getX() - tu.getX()));
+		try {
+			Turret tu = level.getPlayerTank().getTurret();
+			tu.setAngle(Math.atan2(e.getY() - (tu.getY()+tu.getHeight()/2), e.getX() - tu.getX()));
+		}
+		catch (Exception ex) {}
 	}
 	
 	@Override
@@ -118,7 +126,7 @@ public class GameScreen extends JPanel implements Runnable, MouseMotionListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		currentLevel.getPlayerTank().shoot();
+		level.getPlayerTank().shoot();
 	}
 
 	@Override
@@ -133,7 +141,23 @@ public class GameScreen extends JPanel implements Runnable, MouseMotionListener,
 	
 	public void startGame() {
 		setVisible(true);
+		levelCounter = 1;
+		previousScore = 0;
+		levelScore = 0;
+		startTime = Instant.now();
+		level = new Level(levelCounter);
+		terminated = false;
 		new Thread(this).start();
+	}
+	
+	
+	public void stopGame() {
+		level.setGameOver(true);
+		terminated = true;
+	}
+	
+	public void gameIsOver() {
+		frame.switchPanel("highscores");
 	}
 	
 	
@@ -143,12 +167,27 @@ public class GameScreen extends JPanel implements Runnable, MouseMotionListener,
 	   	try
 	   	{
 	   		requestFocusInWindow(); //needed to make key listeners work
-	   		while(true)
+	   		while(level.gameOver() == false)
 	   		{
 	   			Thread.currentThread().sleep(13);
 	            repaint();
+	            
 	        }
 	   		
+	   		//game is over and not ended by clicking the home button
+	   		if (! terminated) {
+	   			Thread.currentThread().sleep(1500);
+	   			ScoreList scores = new ScoreList();
+	   			Score thisScore = new Score(previousScore + levelScore, Duration.between(startTime, currentTime).toSeconds());
+	   			if (scores.isHighscore(thisScore)) {
+	   				String name = "N/A";
+	   				name = JOptionPane.showInputDialog("You Destroyed " + thisScore.getNumTanks() + " tanks in " + thisScore.getSeconds() + " seconds. That is worthy of the leaderboard! Enter your name");
+	   				thisScore.setName(name);
+	   				scores.update(thisScore);
+	   			}
+		   		gameIsOver();
+	   		}
+
    		} 
 	   	catch(Exception e)
 	    {

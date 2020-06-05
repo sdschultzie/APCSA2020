@@ -111,11 +111,6 @@ public class Block implements Locatable
         g.fill(new Rectangle2D.Double(getX(), getY(), getWidth(), getHeight()));
     }
 
-//    public void draw(Graphics window, Color c)
-//    {
-//    	window.setColor(c);
-//	    window.fillRect(getX(), getY(), getWidth(), getHeight());
-//    }
    
 	public boolean equals(Object obj)
 	{

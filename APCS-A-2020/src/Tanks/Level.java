@@ -17,6 +17,8 @@ public class Level {
 	private Tank playerTank;
 	private ArrayList<EnemyTank> enemies;
 	private ArrayList<Block> walls;
+	private boolean gameOver;
+	private int score;
 	
 	
 	// Constructor
@@ -24,8 +26,10 @@ public class Level {
 	{
 		enemies = new ArrayList<EnemyTank>();
 		walls = new ArrayList<Block>();
+		gameOver = false;
 		load(levelNum);
 	}
+	
 	
 	//Getter & Setters
 	public Tank getPlayerTank() {
@@ -39,6 +43,14 @@ public class Level {
 	public ArrayList<Block> getWalls() {
 		return walls;
 	}
+	
+	public boolean gameOver() {
+		return gameOver;
+	}
+	
+	public int getScore() {
+		return score;
+	}
 
 	public void setPlayerTank(Tank playerTank) {
 		this.playerTank = playerTank;
@@ -51,52 +63,61 @@ public class Level {
 	public void setWalls(ArrayList<Block> walls) {
 		this.walls = walls;
 	}
+	
+	public void setGameOver(boolean b) {
+		gameOver = b;
+	}
 
 	
 	//generates level instance variables from levels.txt
 	public void load(int levelNum)
 	{
 		try {
-			File f = new File("src/Tanks/levels.txt");
-			Scanner input = new Scanner(f);
+			Scanner input = new Scanner(new File("src/Tanks/levels.txt"));
 			String line = "";
+			boolean foundLevel = false;
 			
 			//find the level to load
 			while (input.hasNextLine()) {
 				line = input.nextLine();
 				if (line.equals("Level" + levelNum)) {
+					foundLevel = true;
 					System.out.println(line);
+					//add the walls
+					for (int i=0; i<16; i++) {
+						for (int j=0; j<27; j++) {
+							int wallType = input.nextInt();
+							if (wallType == 1) {
+								walls.add(new Wall1(j*36 ,i*36));
+							} 
+							if (wallType == 2) {
+								walls.add(new Wall2(j*36, i*36));
+							}
+						}
+						input.nextLine();
+					}
+					
+					//add the tanks
+					line = input.nextLine();
+					while (!line.equals("---")) {
+						Scanner l = new Scanner(line);
+						String type = l.next();
+						
+						if (type.equals("P")) 
+							playerTank = new Tank(l.nextDouble(), l.nextDouble());
+						else if (type.equals("B")) 
+							enemies.add(new BrownTank(l.nextDouble(), l.nextDouble()));
+						else if (type.equals("G"))
+							enemies.add(new GreenTank(l.nextDouble(), l.nextDouble()));
+						
+						line = input.nextLine();
+					}
 					break;
 				}
 			}
-			
-			//add the walls
-			for (int i=0; i<16; i++) {
-				for (int j=0; j<27; j++) {
-					int wallType = input.nextInt();
-					if (wallType == 1) {
-						walls.add(new Wall1(j*36 ,i*36));
-					} 
-					if (wallType == 2) {
-						walls.add(new Wall2(j*36, i*36));
-					}
-				}
-				input.nextLine();
-			}
-			
-			//add the tanks
-			line = input.nextLine();
-			while (!line.equals("---")) {
-				Scanner l = new Scanner(line);
-				String type = l.next();
-				
-				if (type.equals("P")) 
-					playerTank = new Tank(l.nextDouble(), l.nextDouble());
-				else if (type.equals("B")) 
-					enemies.add(new BrownTank(l.nextDouble(), l.nextDouble()));
-				
-				
-				line = input.nextLine();
+			//System.out.println(foundLevel);
+			if (foundLevel == false) {
+				gameOver = true;
 			}
 		}
 		
@@ -110,59 +131,164 @@ public class Level {
 	public void draw(Graphics g)
 	{
 		playerTank.draw(g);
+		
 		for (Bullet b : playerTank.getBullets()) {
 			b.moveAndDraw(g);
 		}
 		
 		for (EnemyTank e : enemies) {
+			e.move(this);
+			e.aimTurret(playerTank.getBody());
+			if (e.shouldIShoot() == true)
+				e.shoot();
 			e.draw(g);
+			
 			for (Bullet b : e.getBullets()) {
 				b.moveAndDraw(g);
 			}
 		}
+		
 		for (Block b : walls) {
 			b.draw(g);
 		}
 	}
 	
-	
-	public void checkCollisions() {
+	/*
+	 * Detects for collisions with walls
+	 * Destroys bullets if they collided more than their max collisions
+	 * Makes bullets bounce off walls when they haven't gone over their maxCollisions
+	 */
+	public void checkBulletsHitWall(ArrayList<Bullet> bullets) {
 		outer:
-		for (int i=0; i<playerTank.getBullets().size(); i++) {
-			Bullet bullet = playerTank.getBullets().get(i);
-			for (int j=0; j<enemies.size(); j++) {
-				if (bullet.hitSomething(enemies.get(j).getBody()) != 0) {
-					System.out.println("Hit tank");
-					playerTank.getBullets().remove(i);
-					enemies.remove(j);
-					i--;
-					j--;
+		for (int i=0; i<bullets.size(); i++) {
+			Bullet bullet = bullets.get(i);
+			for (Block w : walls) {
+				if (w instanceof Wall1) {
+					if (bullet.hitSomething(w) == 1 || bullet.hitSomething(w) == 2) {
+						bullet.setCollisions(bullet.getCollisions()+1);
+						if (bullet.isDestroyed()) {
+							bullets.remove(i);
+							i--;
+						}
+						else {
+							bullet.setySpeed(-bullet.getySpeed());
+						}
+						continue outer;
+					}
+					if (bullet.hitSomething(w) == 3 || bullet.hitSomething(w) == 4) {
+						bullet.setCollisions(bullet.getCollisions()+1);
+						if (bullet.isDestroyed()) {
+							bullets.remove(i);
+							i--;
+						}
+						else {
+							bullet.setxSpeed(-bullet.getxSpeed());
+						}
+						continue outer;
+					}
 				}
 			}
-			for (Block b : walls) {
-				if (bullet.hitSomething(b) == 1) {
-					System.out.println("collided top");
-					bullet.setySpeed(-bullet.getySpeed());
-					continue outer;
-				}
-				if (bullet.hitSomething(b) == 2) {
-					System.out.println("collided bottom");
-					bullet.setySpeed(-bullet.getySpeed());
-					continue outer;
-				}
-				if (bullet.hitSomething(b) == 3) {
-					System.out.println("collided left");
-					bullet.setxSpeed(-bullet.getxSpeed());
-					continue outer;
-				}
-				if (bullet.hitSomething(b) == 4) {
-					System.out.println("collided right");
-					bullet.setxSpeed(-bullet.getxSpeed());
+		}
+	}
+	
+	
+	/*
+	 * Detects bullets for collisions with other bullets
+	 */
+	public void checkBulletsHitBullets(ArrayList<Bullet> b1, ArrayList<Bullet>b2){
+		outer:
+		for (int i=0; i<b1.size(); i++) {
+			for (int j=0; j<b2.size(); j++) {
+				if (b1.get(i).hitSomething(b2.get(j)) != 0) {
+					b1.remove(i);
+					b2.remove(j);
+					i--;
+					j--;
 					continue outer;
 				}
 			}
 		}
-		
+	}
+	
+	public void checkBulletsHitTank(ArrayList<Bullet> bullets) {
+		outer:
+		for (int i=0; i<bullets.size(); i++) {
+			Bullet b = bullets.get(i);
+			
+			// Check collisions with enemy tanks
+			for (int j=0; j<enemies.size(); j++) {
+				if (b.hitSomething(enemies.get(j).getBody()) != 0) {
+					bullets.remove(i);
+					enemies.remove(j);
+					System.out.println("Hit Tank");
+					score++;
+					i--;
+					j--;
+					continue outer;
+				}
+			}
+			
+			// Check collisions with player tank
+			if (b.hitSomething(playerTank.getBody()) != 0) {
+				gameOver = true;
+			}
+		}
+	}
+	
+	public void checkAllCollisions() {
+		checkBulletsHitWall(playerTank.getBullets());
+		checkBulletsHitTank(playerTank.getBullets());
+		for (int i=0; i<enemies.size(); i++) {
+			checkBulletsHitBullets(playerTank.getBullets(), enemies.get(i).getBullets());
+			checkBulletsHitWall(enemies.get(i).getBullets());
+			checkBulletsHitTank(enemies.get(i).getBullets());
+			
+		}
+	
+		//loop through walls to see if any tanks hit the walls
+		for (Block w : walls) {
+			TankBody body = playerTank.getBody();
+			if (playerTank.hitSomething(w) == 1) {
+				body.setY(w.getY()+w.getHeight()+body.getSpeed());
+			}
+			if (playerTank.hitSomething(w) == 2) {
+				body.setY(w.getY()-body.getWidth()-body.getSpeed());
+			}
+			if (playerTank.hitSomething(w) == 3) {
+				body.setX(w.getX()+w.getWidth()+body.getSpeed());
+			}
+			if (playerTank.hitSomething(w) == 4) {
+				body.setX(w.getX()-body.getWidth()-body.getSpeed());
+			}
+			
+			//check if enemy moving tanks hit walls
+			for (EnemyTank e : enemies) {
+				if (e.getBody().getSpeed() != 0){
+					
+					TankBody eBody = e.getBody();
+					if (e.hitSomething(w) == 1) {
+						eBody.setY(w.getY()+w.getHeight()+body.getSpeed());
+					}
+					if (e.hitSomething(w) == 2) {
+						eBody.setY(w.getY()-body.getWidth()-body.getSpeed());
+					}
+					if (e.hitSomething(w) == 3) {
+						eBody.setX(w.getX()+w.getWidth()+body.getSpeed());
+					}
+					if (e.hitSomething(w) == 4) {
+						eBody.setX(w.getX()-body.getWidth()-body.getSpeed());
+					}
+				}
+			}
+		}
+	}
+
+
+	public boolean isComplete() {
+		if (enemies.size() == 0) 
+			return true;
+		else
+			return false;
 	}
 	
 	
@@ -177,118 +303,4 @@ public class Level {
 		
 		return output + playerTank;
 	}
-//		// paint method used to repaint -----------------------
-//		public void paintComponent(Graphics g) 
-//		{
-//			super.paintComponent(g);
-//			Graphics2D g2 = (Graphics2D) g;
-//			for (Bullet b : tank.getBullets()) {
-//				b.moveAndDraw(g2);
-//			}
-//			enemy.getTurret().setAngle(Math.PI);
-//			enemy.draw(g2);
-//			tank.draw(g2);
-//			
-//
-//			
-//			//Moves tank with WASD
-//			if(keys[0] == true)
-//			{
-//				tank.move(0);
-//			}
-//			if(keys[1] == true)
-//			{
-//				tank.move(1);
-//			}
-//			if(keys[2] == true)
-//			{
-//				tank.move(2);
-//			}
-//			if(keys[3] == true)
-//			{
-//				tank.move(3);
-//			}
-//			
-//		}
-//		
-//		
-//		//Key listener methods -------------------------------
-//		@Override
-//		public void keyTyped(KeyEvent e) {}
-//
-//		@Override
-//		public void keyPressed(KeyEvent e) 
-//		{
-//			switch(toUpperCase(e.getKeyChar()))
-//			{
-//				case 'W' : keys[0]=true; break;
-//				case 'S' : keys[1]=true; break;
-//				case 'A' : keys[2]=true; break;
-//				case 'D' : keys[3]=true; break;
-//			}
-//		}
-//
-//		@Override
-//		public void keyReleased(KeyEvent e) 
-//		{
-//			switch(toUpperCase(e.getKeyChar()))
-//			{
-//				case 'W' : keys[0]=false; break;
-//				case 'S' : keys[1]=false; break;
-//				case 'A' : keys[2]=false; break;
-//				case 'D' : keys[3]=false; break;
-//			}
-//		}
-//		
-//		//Mouse listener methods -------------------------------
-//		@Override
-//		public void mouseDragged(MouseEvent e) {}
-//
-//		@Override
-//		public void mouseMoved(MouseEvent e) {
-//			Turret tu = tank.getTurret();
-//			tu.setAngle(Math.atan2(e.getY() - (tu.getY()+tu.getHeight()/2), e.getX() - tu.getX()));
-//		}
-//		
-//		@Override
-//		public void mouseClicked(MouseEvent e) {}
-//
-//		@Override
-//		public void mousePressed(MouseEvent e) {
-//			tank.shoot();
-//		}
-//
-//		@Override
-//		public void mouseReleased(MouseEvent e) {}
-//
-//		@Override
-//		public void mouseEntered(MouseEvent e) {}
-//
-//		@Override
-//		public void mouseExited(MouseEvent e) {}
-//		//------------------------------------------------------------
-//		
-//		public void startGame() {
-//			setVisible(true);
-//			new Thread(this).start();
-//		}
-//		
-//		
-//		// Main loop
-//		@Override
-//		public void run() {
-//		   	try
-//		   	{
-//		   		requestFocusInWindow(); //needed to make key listeners work
-//		   		while(true)
-//		   		{
-//		   			Thread.currentThread().sleep(13);
-//		            repaint();
-//		        }
-//		   		
-//	   		} 
-//		   	catch(Exception e)
-//		    {
-//		    }
-//		}
 }

@@ -2,22 +2,30 @@ package Tanks;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 
 public class Bullet extends Block{
 	private double xSpeed;
 	private double ySpeed;
+	private final int maxCollisions;
+	private int collisions;
 	
 	// Constructors -------------------------------------
-	public Bullet(double x, double y, double xSpd, double ySpd) {
-		super (x,y,5,5,Color.black);
+	public Bullet(double x, double y, double xSpd, double ySpd, int maxCol) {
+		super (x,y,6,6,Color.black);
 		setxSpeed(xSpd);
 		setySpeed(ySpd);
+		maxCollisions = maxCol;
+		setCollisions(0);
 	}
 	
-	public Bullet(double x, double y, Color c, double xSpd, double ySpd) {
-		super(x,y,5,5,c);
+	public Bullet(double x, double y, Color c, double xSpd, double ySpd, int maxCol) {
+		super(x,y,6,6,c);
 		setxSpeed(xSpd);
 		setySpeed(ySpd);
+		maxCollisions = maxCol;
+		setCollisions(0);
 	}
 
 	
@@ -29,6 +37,10 @@ public class Bullet extends Block{
 	public double getySpeed() {
 		return ySpeed;
 	}
+	
+	public int getCollisions() {
+		return collisions;
+	}
 
 	public void setxSpeed(double xSpd) {
 		this.xSpeed = xSpd;
@@ -36,6 +48,10 @@ public class Bullet extends Block{
 
 	public void setySpeed(double ySpeed) {
 		this.ySpeed = ySpeed;
+	}
+	
+	public void setCollisions(int col) {
+		this.collisions = col;
 	}
 	//------------------------------------------------
 	
@@ -64,14 +80,18 @@ public class Bullet extends Block{
 		
 		//checks top and bottom collisions
 		if (this.getX() <= that.getX() + that.getWidth() && this.getX() + this.getWidth() >= that.getX()) {
-			if (this.getY() <= that.getY() + that.getHeight() + Math.abs(this.getySpeed()) && this.getY() >= that.getY() + that.getHeight() - Math.abs(this.getySpeed())) {
-				//System.out.println("collided top");
-				return 1;
+			if (getySpeed() < 0) {
+				if (this.getY() <= that.getY() + that.getHeight() + Math.abs(this.getySpeed()) && this.getY() > that.getY() + that.getHeight() - Math.abs(this.getySpeed())) {
+					//System.out.println("collided top");
+					return 1;
+				}
 			}
-			if (this.getY() + this.getHeight() >= that.getY() - Math.abs(this.getySpeed()) && this.getY() + this.getHeight() <= that.getY() + Math.abs(this.getySpeed())) {
-				//System.out.println("collided bottom");
-				return 2;
-			}	
+			if (getySpeed() > 0) {
+				if (this.getY() + this.getHeight() >= that.getY() - Math.abs(this.getySpeed()) && this.getY() + this.getHeight() <= that.getY() + Math.abs(this.getySpeed())) {
+					//System.out.println("collided bottom");
+					return 2;
+				}	
+			}
 		}
 		
 		//checks left and right collisions
@@ -82,7 +102,6 @@ public class Bullet extends Block{
 					return 3;
 				}
 			}
-			
 			if (getxSpeed() > 0) {
 				if (this.getX() + this.getWidth() >= that.getX() - Math.abs(this.getxSpeed()) && this.getX() + this.getWidth() <= that.getX() + Math.abs(this.getxSpeed())) {
 					//System.out.println("collided right");
@@ -91,13 +110,21 @@ public class Bullet extends Block{
 			}
 		}
 		
-		
 		return 0;
+	}
+	
+	
+	public boolean isDestroyed() {
+		if (collisions > maxCollisions) 
+			return true;
+		else
+			return false;
 	}
 	
 	
 	public String toString()
 	{
-		return getX() + " " + getY() + " " + getWidth() + " " + getHeight() + " " + getxSpeed() + " " + getySpeed();
+		return 	String.format("%.2f", getX()) + " " + String.format("%.2f", getY()) + " " + getWidth() + " " + getHeight() + " " + 
+				String.format("%.2f", getxSpeed()) + " " + String.format("%.2f", getySpeed());
 	}
 }

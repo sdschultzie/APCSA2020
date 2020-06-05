@@ -73,6 +73,17 @@ public class Alien extends MovingThing
 		
 	}
 	
+	public void setImage(String directory) {
+		try
+		{
+			URL url = getClass().getResource(directory);
+			image = ImageIO.read(url);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Couldn't locate image file");
+		}
+	}
 
 	public String toString()
 	{

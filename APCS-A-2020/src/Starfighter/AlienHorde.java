@@ -23,7 +23,7 @@ public class AlienHorde
 		for (int i=0; i<size; i++) {
 			int x = 50 + (i%10)*70;
 			int y = 50 + (i/10)*50;
-			aliens.add(new Alien(x,y,1));
+			aliens.add(new Alien(x,y,2));
 		}
 	}
 

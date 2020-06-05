@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class OuterSpace extends Canvas implements KeyListener, Runnable
 {
 	private Ship ship;
-   	private AlienHorde horde;
+   	private AlienHorde2 horde;
 	private Bullets shots;
 	private boolean takenShot;
 	private int waitTimer = 0;
@@ -37,7 +37,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		//instantiate other instance variables
 		//Ship, Alien
 		ship = new Ship (400,500,30,30,3);
-		horde = new AlienHorde(10);
+		horde = new AlienHorde2(5);
 		shots = new Bullets();
 		takenShot = false;
 
@@ -78,7 +78,9 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		graphToBack.setColor(Color.BLACK);
 		graphToBack.fillRect(0,0,800,600);
 		horde.removeDeadOnes(shots.getList());
+		horde.checkWallHit();
 		horde.drawEmAll(graphToBack);
+		
 		ship.draw(graphToBack);
 		if (shots.size() > 0) {
 			shots.drawEmAll(graphToBack);

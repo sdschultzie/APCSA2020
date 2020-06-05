@@ -27,7 +27,7 @@ public class TitleScreen extends JPanel
     	InstructionTitle.setAlignmentX(CENTER_ALIGNMENT);
     	InstructionTitle.setFont(new Font("Roboto", Font.BOLD, 50));
 
-    	JLabel InstructionTxt = new JLabel("<html><p style='text-align: center'>Use WASD to move and click mouse to shoot. You can only shoot up to five bullets at a time. The most tanks destroyed in the fastest time wins</p></html>");
+    	JLabel InstructionTxt = new JLabel("<html><p style='text-align: center'>Use WASD to move and click mouse to shoot. You can only shoot up to five bullets at a time. Bullets bounce off yellow walls and fly over circular holes. The most tanks destroyed in the fastest time wins.</p></html>");
     	InstructionTxt.setAlignmentX(CENTER_ALIGNMENT);
     	InstructionTxt.setFont(new Font("Roboto", Font.PLAIN, 20));
 

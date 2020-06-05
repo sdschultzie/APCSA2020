@@ -7,6 +7,7 @@ public class AlienHorde2 extends AlienHorde{
 	public AlienHorde2(int size) {
 		super(size);
 		for (Alien a : getAliens()) {
+			a.setImage("/Starfighter/Images/alien2.png");
 			a.setPos((int) (Math.random()*735+15), (int) (Math.random()*375)+15);
 		}
 	}
